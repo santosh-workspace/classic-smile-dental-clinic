@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#fdfbf6;color:#1c2340;font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#1e3a8a;text-decoration:none}
+a:hover{color:#c9963f}
+::selection{background:#f3e3c3}
+input,select,textarea{font-family:'Manrope',sans-serif}
+input::placeholder,textarea::placeholder{color:#9aa3bd}
+[data-rv]{opacity:0;transform:translateY(30px);transition:opacity .85s cubic-bezier(.2,.7,.2,1),transform .85s cubic-bezier(.2,.7,.2,1)}
+[data-rv].rv-in{opacity:1;transform:none}
+[data-rv-blur]{opacity:0;filter:blur(10px);transform:translateY(24px) scale(.98);transition:opacity 1s cubic-bezier(.2,.7,.2,1),filter 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+[data-rv-blur].rv-in{opacity:1;filter:blur(0);transform:none}
+[data-zoom]{overflow:hidden}
+[data-zoom] [data-zoom-img]{transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+[data-zoom]:hover [data-zoom-img]{transform:scale(1.07)}
+@keyframes pulseDot{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes blobA{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(50px,36px) scale(1.18)}}
+@keyframes blobB{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-60px,-24px) scale(1.12)}}
+@keyframes marqueeX{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes floatBadge{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+@media (max-width:900px){[data-hide-mobile]{display:none !important}}
+[data-mobile-only]{display:none !important}
+@media (max-width:900px){[data-mobile-only]{display:flex !important}}
+</style>
+</helmet>
+
+<!-- ============ STICKY NAV ============ -->
+<nav style="position:sticky;top:0;z-index:100;background:{{ navBg }};backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid {{ navBorder }};transition:background .3s,border-color .3s">
+  <div style="max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:16px 28px">
+    <a href="#top" style="display:flex;align-items:center;gap:11px;color:#1c2340">
+      <span style="width:40px;height:40px;border-radius:50%;background:{{ navy }};display:flex;align-items:center;justify-content:center;color:#f3e3c3;font-family:'DM Serif Display',serif;font-size:20px">CS</span>
+      <span style="display:flex;flex-direction:column;line-height:1.15">
+        <span style="font-weight:800;font-size:16.5px;letter-spacing:-.01em">Classic Smile Dental Care</span>
+        <span style="font-size:10.5px;color:#7c86a6;font-weight:600;letter-spacing:.1em;text-transform:uppercase">Tanishq Orchid, Charholi Rd · Pune</span>
+      </span>
+    </a>
+    <div data-hide-mobile style="display:flex;align-items:center;gap:28px;font-size:14.5px;font-weight:600">
+      <a href="#services" style="color:#3c4666" style-hover="color:#c9963f">Treatments</a>
+      <a href="#why" style="color:#3c4666" style-hover="color:#c9963f">Why Us</a>
+      <a href="#doctor" style="color:#3c4666" style-hover="color:#c9963f">Our Doctor</a>
+      <a href="#reviews" style="color:#3c4666" style-hover="color:#c9963f">Reviews</a>
+      <a href="#visit" style="color:#3c4666" style-hover="color:#c9963f">Visit Us</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <a href="tel:+919763226605" aria-label="Call Classic Smile Dental Care: 097632 26605" style="display:flex;align-items:center;justify-content:center;gap:8px;background:{{ navy }};color:#fff;padding:11px 20px;border-radius:12px;font-weight:700;font-size:14px;box-shadow:0 6px 18px rgba(28,47,110,.28);transition:transform .2s,box-shadow .2s" style-hover="transform:translateY(-2px);box-shadow:0 10px 24px rgba(28,47,110,.38);color:#fff">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" fill="#fff"></path></svg>
+        Call
+      </a>
+      <button data-mobile-only onClick="{{ toggleMenu }}" aria-label="Open menu" style="align-items:center;justify-content:center;flex-direction:column;gap:5px;width:44px;height:44px;border-radius:12px;border:1.5px solid #d9ddeb;background:#fff;cursor:pointer;padding:0">
+        <span style="width:18px;height:2px;border-radius:2px;background:#1c2340;transition:transform .25s;transform:{{ bar1 }}"></span>
+        <span style="width:18px;height:2px;border-radius:2px;background:#1c2340;opacity:{{ bar2 }};transition:opacity .2s"></span>
+        <span style="width:18px;height:2px;border-radius:2px;background:#1c2340;transition:transform .25s;transform:{{ bar3 }}"></span>
+      </button>
+    </div>
+  </div>
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div data-mobile-only style="flex-direction:column;gap:4px;padding:10px 20px 20px;background:#fdfbf6;border-top:1px solid #e7e3d6">
+      <a href="#services" onClick="{{ closeMenu }}" style="padding:13px 12px;border-radius:12px;font-size:16px;font-weight:700;color:#1c2340" style-hover="background:#f4f1e8;color:#c9963f">Treatments</a>
+      <a href="#why" onClick="{{ closeMenu }}" style="padding:13px 12px;border-radius:12px;font-size:16px;font-weight:700;color:#1c2340" style-hover="background:#f4f1e8;color:#c9963f">Why Us</a>
+      <a href="#doctor" onClick="{{ closeMenu }}" style="padding:13px 12px;border-radius:12px;font-size:16px;font-weight:700;color:#1c2340" style-hover="background:#f4f1e8;color:#c9963f">Our Doctor</a>
+      <a href="#reviews" onClick="{{ closeMenu }}" style="padding:13px 12px;border-radius:12px;font-size:16px;font-weight:700;color:#1c2340" style-hover="background:#f4f1e8;color:#c9963f">Reviews</a>
+      <a href="#visit" onClick="{{ closeMenu }}" style="padding:13px 12px;border-radius:12px;font-size:16px;font-weight:700;color:#1c2340" style-hover="background:#f4f1e8;color:#c9963f">Visit Us</a>
+    </div>
+  </sc-if>
+</nav>
+
+<!-- ============ HERO (centered, image below) ============ -->
+<header id="top" style="position:relative;overflow:hidden;background:{{ navy }}">
+  <div aria-hidden="true" style="position:absolute;inset:0;background:radial-gradient(1000px 500px at 50% -10%,rgba(201,150,63,.22),transparent 60%)"></div>
+  <div aria-hidden="true" style="position:absolute;top:-120px;left:-80px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(232,195,122,.16),transparent 70%);filter:blur(30px);animation:blobA 11s ease-in-out infinite"></div>
+  <div aria-hidden="true" style="position:absolute;bottom:40px;right:-100px;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle,rgba(120,140,220,.14),transparent 70%);filter:blur(34px);animation:blobB 13s ease-in-out infinite"></div>
+  <div aria-hidden="true" style="position:absolute;top:120px;right:14%;width:10px;height:10px;border-radius:50%;background:rgba(232,195,122,.6);animation:floatBadge 5s ease-in-out infinite"></div>
+  <div aria-hidden="true" style="position:absolute;top:230px;left:10%;width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35);animation:floatBadge 6.5s ease-in-out infinite"></div>
+  <div style="position:relative;max-width:900px;margin:0 auto;padding:76px 28px 0;text-align:center">
+    <div data-rv style="display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(243,227,195,.35);border-radius:999px;padding:9px 20px;font-size:13px;font-weight:700;color:#f3e3c3;letter-spacing:.04em">
+      <span style="width:7px;height:7px;border-radius:50%;background:{{ gold }};animation:pulseDot 2s infinite"></span>
+      Now welcoming new patients at Tanishq Orchid, Charholi
+    </div>
+    <h1 data-rv style="font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(44px,6vw,74px);line-height:1.08;letter-spacing:-.01em;margin:26px 0 20px;color:#fdfbf6">
+      Classic care for a<br><em style="color:{{ gold }}">timeless smile</em>
+    </h1>
+    <p data-rv style="font-size:18px;line-height:1.7;color:#c3cae4;max-width:560px;margin:0 auto 34px;text-wrap:pretty">
+      Advanced, gentle dentistry for the whole family — right in your neighbourhood. Honest treatment plans, transparent pricing, and a team that treats you like their own.
+    </p>
+    <div data-rv style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:center;margin-bottom:56px">
+      <a href="#visit" style="background:{{ gold }};color:#1c2340;padding:16px 32px;border-radius:12px;font-weight:800;font-size:15.5px;box-shadow:0 12px 30px rgba(0,0,0,.3);transition:transform .2s,box-shadow .2s" style-hover="transform:translateY(-2px);box-shadow:0 16px 38px rgba(0,0,0,.4);color:#1c2340">Book an Appointment</a>
+      <a href="#services" style="padding:16px 28px;border-radius:12px;font-weight:700;font-size:15.5px;color:#fdfbf6;border:1.5px solid rgba(255,255,255,.35);transition:border-color .2s,transform .2s" style-hover="border-color:#e8c37a;transform:translateY(-2px);color:#e8c37a">View Treatments</a>
+    </div>
+  </div>
+  <div data-rv style="position:relative;max-width:1000px;margin:0 auto;padding:0 28px">
+    <div data-zoom style="border-radius:26px 26px 0 0;box-shadow:0 -20px 60px rgba(0,0,0,.35)">
+      <img data-zoom-img src="https://images.unsplash.com/photo-1629909615957-be38d48fbbe6?auto=format&fit=crop&w=1400&q=80" alt="Bright, modern dental treatment room at Classic Smile Dental Care" style="width:100%;height:380px;object-fit:cover;display:block;transform:translateY({{ heroY }})">
+    </div>
+    <div style="position:absolute;top:-26px;right:56px;background:#fff;border-radius:16px;padding:14px 20px;box-shadow:0 16px 38px rgba(0,0,0,.3);display:flex;align-items:center;gap:12px;animation:floatBadge 5s ease-in-out infinite">
+      <span style="width:40px;height:40px;border-radius:12px;background:#f4f1e8;display:flex;align-items:center;justify-content:center;font-size:19px">🦷</span>
+      <span style="display:flex;flex-direction:column;line-height:1.25;text-align:left">
+        <span style="font-weight:800;font-size:14.5px;color:#1c2340">8,000+ smiles</span>
+        <span style="font-size:12px;color:#7c86a6">cared for with love</span>
+      </span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ TRUST BAR ============ -->
+<section id="stats" aria-label="Clinic highlights" style="background:#fdfbf6;border-bottom:1px solid #ece7d8">
+  <div style="max-width:1200px;margin:0 auto;padding:40px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:26px;text-align:center">
+    <sc-for list="{{ stats }}" as="s" hint-placeholder-count="5">
+      <div data-rv>
+        <div style="font-family:'DM Serif Display',serif;font-size:38px;line-height:1;color:{{ navy }}">{{ s.value }}</div>
+        <div style="font-size:13px;margin-top:8px;color:#7c86a6;font-weight:700;letter-spacing:.03em">{{ s.label }}</div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section id="services" style="max-width:1200px;margin:0 auto;padding:96px 28px 48px">
+  <div data-rv style="text-align:center;max-width:600px;margin:0 auto 54px">
+    <div style="font-size:12.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#c9963f;margin-bottom:14px">Our Treatments</div>
+    <h2 style="font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(32px,4vw,48px);line-height:1.1;margin:0 0 16px;color:#1c2340">Everything your smile needs</h2>
+    <p style="font-size:16.5px;line-height:1.65;color:#5a6382;margin:0;text-wrap:pretty">From your first check-up to complete smile rehabilitation — planned carefully, explained clearly, priced honestly.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px">
+    <sc-for list="{{ services }}" as="svc" hint-placeholder-count="6">
+      <article data-rv style="position:relative;background:#fff;border:1px solid #ece7d8;border-radius:18px;overflow:hidden;box-shadow:0 2px 12px rgba(28,35,64,.05);transition-delay:{{ svc.delay }};transition-property:opacity,transform,box-shadow;transition-duration:.85s,.85s,.25s" style-hover="transform:translateY(-6px);box-shadow:0 22px 48px rgba(28,35,64,.14)">
+        <div style="position:relative" data-zoom>
+          <div data-zoom-img role="img" aria-label="{{ svc.imgAlt }}" style="width:100%;height:180px;background-color:#f4f1e8;background-image:url({{ svc.img }});background-size:cover;background-position:center"></div>
+          <span style="position:absolute;top:14px;left:14px;background:{{ navy }};color:#f3e3c3;font-family:'DM Serif Display',serif;font-size:15px;padding:6px 13px;border-radius:999px;opacity:.92">{{ svc.num }}</span>
+        </div>
+        <div style="padding:24px 26px 28px">
+          <h3 style="font-size:19px;font-weight:800;margin:0 0 10px;color:#1c2340;letter-spacing:-.01em">{{ svc.title }}</h3>
+          <p style="font-size:14.5px;line-height:1.65;color:#5a6382;margin:0 0 18px;text-wrap:pretty">{{ svc.desc }}</p>
+          <a href="#visit" style="font-size:14px;font-weight:700;color:{{ navy }};display:inline-flex;align-items:center;gap:6px" style-hover="gap:10px;color:#c9963f">Book this treatment <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+    </sc-for>
+  </div>
+</section>
+
+<!-- ============ WHY CHOOSE US (4 cards) ============ -->
+<section id="why" style="background:#f4f1e8;border-top:1px solid #ece7d8;border-bottom:1px solid #ece7d8">
+  <div style="max-width:1200px;margin:0 auto;padding:88px 28px">
+    <div data-rv style="display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap;margin-bottom:44px">
+      <div style="max-width:540px">
+        <div style="font-size:12.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#c9963f;margin-bottom:14px">Why Classic Smile</div>
+        <h2 style="font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(30px,4vw,44px);line-height:1.12;margin:0;color:#1c2340">Care you can feel from your first visit</h2>
+      </div>
+      <a href="#visit" style="font-weight:800;font-size:15px;color:{{ navy }};border-bottom:2px solid #c9963f;padding-bottom:4px" style-hover="color:#c9963f">Book a consultation →</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px">
+      <sc-for list="{{ reasons }}" as="r" hint-placeholder-count="4">
+        <div data-rv style="background:#fff;border-radius:18px;padding:28px 26px;box-shadow:0 2px 12px rgba(28,35,64,.05);transition:transform .25s,box-shadow .25s" style-hover="transform:translateY(-5px);box-shadow:0 18px 40px rgba(28,35,64,.12)">
+          <div style="width:48px;height:48px;border-radius:50%;background:{{ navy }};color:#f3e3c3;display:flex;align-items:center;justify-content:center;font-size:21px;margin-bottom:18px">{{ r.icon }}</div>
+          <div style="font-weight:800;font-size:16.5px;color:#1c2340;margin-bottom:8px">{{ r.title }}</div>
+          <div style="font-size:14px;line-height:1.65;color:#5a6382;text-wrap:pretty">{{ r.desc }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLINIC GALLERY MARQUEE ============ -->
+<section aria-label="Inside the clinic" style="background:#fdfbf6;padding:26px 0;border-bottom:1px solid #ece7d8;overflow:hidden">
+  <div style="display:flex;gap:18px;width:max-content;animation:marqueeX 38s linear infinite">
+    <sc-for list="{{ galleryLoop }}" as="g" hint-placeholder-count="6">
+      <div data-zoom style="border-radius:16px;flex:none">
+        <div data-zoom-img role="img" aria-label="{{ g.alt }}" style="width:280px;height:180px;background-color:#f4f1e8;background-image:url({{ g.img }});background-size:cover;background-position:center;border-radius:16px"></div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<!-- ============ DOCTOR ============ -->
+<section id="doctor" style="background:{{ navy }}">
+  <div style="max-width:1200px;margin:0 auto;padding:88px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:56px;align-items:center">
+    <div data-rv style="position:relative;max-width:440px">
+      <div style="position:absolute;inset:auto -14px -14px auto;width:70%;height:70%;border-radius:22px;background:rgba(232,195,122,.25);z-index:0"></div>
+      <div data-zoom style="position:relative;z-index:1;border-radius:20px;box-shadow:0 26px 52px rgba(0,0,0,.35)">
+        <img data-zoom-img id="doctor-img" src="https://images.unsplash.com/photo-1637059824899-a441006a6875?auto=format&fit=crop&w=800&q=85" alt="Dr. Abhishek Kamble, Chief Dental Surgeon" style="width:100%;height:480px;object-fit:cover;object-position:top;display:block">
+      </div>
+      <div style="position:absolute;z-index:2;bottom:22px;left:-10px;background:#fff;border-radius:14px;padding:13px 18px;box-shadow:0 14px 34px rgba(0,0,0,.28);font-size:13.5px;font-weight:800;color:#1c2340;display:flex;align-items:center;gap:9px">
+        <span style="width:8px;height:8px;border-radius:50%;background:{{ gold }}"></span>10+ years of clinical practice
+      </div>
+    </div>
+    <div style="color:#dde2f4">
+      <div data-rv style="font-size:12.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:{{ gold }};margin-bottom:14px">Meet Your Doctor</div>
+      <h2 data-rv style="font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(32px,4vw,44px);line-height:1.12;margin:0 0 8px;color:#fdfbf6">Dr. Abhishek Kamble</h2>
+      <div data-rv style="font-size:15.5px;font-weight:700;color:{{ gold }};margin-bottom:22px">BDS, MDS — Prosthodontics & Implantology</div>
+      <p data-rv style="font-size:16px;line-height:1.7;color:#c3cae4;margin:0 0 28px;max-width:480px;text-wrap:pretty">
+        Dr. Kamble built Classic Smile around one promise: treat every patient like family. Over a decade of practice, he has cared for more than 8,000 patients — from nervous first visits to full-mouth rehabilitations.
+      </p>
+      <div style="display:grid;grid-template-columns:1fr;gap:14px;max-width:500px">
+        <sc-for list="{{ credentials }}" as="c" hint-placeholder-count="4">
+          <div data-rv style="display:flex;gap:13px;align-items:flex-start;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 18px">
+            <span style="flex:none;width:26px;height:26px;border-radius:8px;background:rgba(232,195,122,.18);color:{{ gold }};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800">✓</span>
+            <div>
+              <div style="font-weight:800;font-size:14.5px;color:#fdfbf6">{{ c.title }}</div>
+              <div style="font-size:13px;line-height:1.5;color:#9aa3c9;margin-top:2px">{{ c.desc }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REVIEWS ============ -->
+<section id="reviews" style="max-width:1200px;margin:0 auto;padding:92px 28px">
+  <div data-rv style="text-align:center;max-width:560px;margin:0 auto 48px">
+    <div style="font-size:12.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#c9963f;margin-bottom:14px">Patient Reviews</div>
+    <h2 style="font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(30px,4vw,44px);line-height:1.12;margin:0 0 14px;color:#1c2340">Smiles that speak for us</h2>
+    <div style="display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #ece7d8;border-radius:999px;padding:8px 18px;font-size:14px;font-weight:800;color:#1c2340;box-shadow:0 3px 12px rgba(28,35,64,.06)">
+      <svg width="17" height="17" viewBox="0 0 48 48" aria-label="Google" role="img"><path fill="#4285f4" d="M45.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11.8c-.5 2.8-2.1 5.1-4.4 6.7v5.5h7.1c4.2-3.9 6.6-9.6 6.6-16.2z"></path><path fill="#34a853" d="M24 46c6 0 10.9-2 14.5-5.3l-7.1-5.5c-2 1.3-4.5 2.1-7.4 2.1-5.7 0-10.5-3.8-12.2-9h-7.3v5.7C8.1 41.2 15.4 46 24 46z"></path><path fill="#fbbc05" d="M11.8 28.3c-.4-1.3-.7-2.8-.7-4.3s.3-3 .7-4.3V14h-7.3C2.9 17 2 20.4 2 24s.9 7 2.5 10l7.3-5.7z"></path><path fill="#ea4335" d="M24 10.7c3.2 0 6.1 1.1 8.4 3.3l6.3-6.3C34.9 4.2 30 2 24 2 15.4 2 8.1 6.8 4.5 14l7.3 5.7c1.7-5.2 6.5-9 12.2-9z"></path></svg>
+      4.8 <span style="color:#e5a93d;letter-spacing:1px">★★★★★</span> <span style="font-weight:600;color:#7c86a6">on Google</span>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;align-items:stretch">
+    <div id="rating-chart" data-rv style="background:#fff;border:1px solid #ece7d8;border-radius:20px;padding:36px 34px;box-shadow:0 18px 44px rgba(28,35,64,.08);text-align:left;display:flex;flex-direction:column;justify-content:center;gap:8px">
+      <div style="display:flex;align-items:baseline;gap:12px">
+        <span style="font-family:'DM Serif Display',serif;font-size:58px;line-height:1;color:#1c2340">4.8</span>
+        <span style="color:#e5a93d;font-size:18px;letter-spacing:2px">★★★★★</span>
+      </div>
+      <div style="font-size:13.5px;color:#7c86a6;margin-bottom:14px">Based on 300+ Google reviews</div>
+      <sc-for list="{{ ratingBars }}" as="rb" hint-placeholder-count="5">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="flex:none;width:24px;font-size:13px;font-weight:700;color:#3c4666">{{ rb.star }}★</span>
+          <div style="flex:1;height:9px;border-radius:999px;background:#f4f1e8;overflow:hidden">
+            <div style="height:100%;border-radius:999px;background:{{ gold }};width:{{ rb.w }};transition:width 1.2s cubic-bezier(.2,.7,.2,1);transition-delay:{{ rb.delay }}"></div>
+          </div>
+          <span style="flex:none;width:38px;font-size:12.5px;color:#7c86a6;text-align:right">{{ rb.pct }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="text-align:center">
+      <div data-rv style="background:#fff;border:1px solid #ece7d8;border-radius:20px;padding:48px 44px 40px;box-shadow:0 18px 44px rgba(28,35,64,.08);position:relative;min-height:230px;overflow:hidden">
+        <div style="font-size:52px;line-height:1;color:#e8dfc8;font-family:'DM Serif Display',serif;position:absolute;top:22px;left:32px" aria-hidden="true">"</div>
+        <p style="font-size:18px;line-height:1.7;color:#3c4666;margin:0 0 26px;font-weight:600;text-wrap:pretty;opacity:{{ slideOpacity }};transition:opacity .35s">{{ activeQuote }}</p>
+        <div style="opacity:{{ slideOpacity }};transition:opacity .35s">
+          <div style="font-weight:800;font-size:15.5px;color:#1c2340">{{ activeName }}</div>
+          <div style="font-size:13px;color:#7c86a6;margin-top:3px">{{ activeMeta }}</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;align-items:center;gap:18px;margin-top:28px">
+        <button onClick="{{ prevSlide }}" aria-label="Previous review" style="width:42px;height:42px;border-radius:50%;border:1.5px solid #d9ddeb;background:#fff;color:{{ navy }};font-size:17px;cursor:pointer;transition:border-color .2s,transform .2s" style-hover="border-color:#c9963f;transform:scale(1.06)">←</button>
+        <div style="display:flex;gap:8px">
+          <sc-for list="{{ dots }}" as="d" hint-placeholder-count="3">
+            <button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width:{{ d.w }};height:8px;border-radius:999px;border:none;background:{{ d.bg }};cursor:pointer;transition:all .3s;padding:0"></button>
+          </sc-for>
+        </div>
+        <button onClick="{{ nextSlide }}" aria-label="Next review" style="width:42px;height:42px;border-radius:50%;border:1.5px solid #d9ddeb;background:#fff;color:{{ navy }};font-size:17px;cursor:pointer;transition:border-color .2s,transform .2s" style-hover="border-color:#c9963f;transform:scale(1.06)">→</button>
+      </div>
+      <p style="font-size:11.5px;color:#9aa3bd;margin-top:22px">Illustrative patient stories, representative of typical experiences.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VISIT / CONTACT ============ -->
+<section id="visit" style="background:#f4f1e8;border-top:1px solid #ece7d8">
+  <div style="max-width:1200px;margin:0 auto;padding:88px 28px">
+    <div data-rv style="text-align:center;max-width:560px;margin:0 auto 46px">
+      <div style="font-size:12.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#c9963f;margin-bottom:14px">Visit Us</div>
+      <h2 style="font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(30px,4vw,44px);line-height:1.12;margin:0 0 14px;color:#1c2340">Book your appointment</h2>
+      <p style="font-size:16px;line-height:1.6;color:#5a6382;margin:0">Call, walk in, or send a request — we'll confirm your slot the same day.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;align-items:stretch">
+      <div data-rv style="background:#fff;border:1px solid #ece7d8;border-radius:20px;padding:36px 32px;box-shadow:0 10px 30px rgba(28,35,64,.06)">
+        <sc-if value="{{ formSent }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:380px;gap:14px">
+            <span style="width:64px;height:64px;border-radius:50%;background:#f4f1e8;color:{{ navy }};display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800">✓</span>
+            <div style="font-weight:800;font-size:20px;color:#1c2340">Request received!</div>
+            <p style="font-size:15px;color:#5a6382;max-width:320px;line-height:1.6;margin:0">Thank you — we'll call you shortly to confirm your appointment. For urgent care, call <a href="tel:+919763226605" style="font-weight:700">097632 26605</a>.</p>
+            <button onClick="{{ resetForm }}" style="margin-top:10px;background:none;border:1.5px solid #d9ddeb;border-radius:12px;padding:10px 22px;font-weight:700;font-size:14px;color:{{ navy }};cursor:pointer" style-hover="border-color:#c9963f">Send another request</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ formNotSent }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <label style="display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:700;color:#3c4666">Full name
+                <input value="{{ fName }}" onChange="{{ setFName }}" placeholder="Your name" style="border:1.5px solid #e2e0d3;border-radius:12px;padding:13px 15px;font-size:14.5px;color:#1c2340;background:#fdfcf9;outline:none;transition:border-color .2s" style-focus="border-color:#1c2f6e">
+              </label>
+              <label style="display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:700;color:#3c4666">Phone
+                <input value="{{ fPhone }}" onChange="{{ setFPhone }}" placeholder="+91" style="border:1.5px solid #e2e0d3;border-radius:12px;padding:13px 15px;font-size:14.5px;color:#1c2340;background:#fdfcf9;outline:none;transition:border-color .2s" style-focus="border-color:#1c2f6e">
+              </label>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:700;color:#3c4666">Treatment needed
+              <select value="{{ fService }}" onChange="{{ setFService }}" style="border:1.5px solid #e2e0d3;border-radius:12px;padding:13px 15px;font-size:14.5px;color:#1c2340;background:#fdfcf9;outline:none;appearance:auto">
+                <option>Check-up & cleaning</option>
+                <option>Teeth whitening / smile design</option>
+                <option>Root canal treatment</option>
+                <option>Dental implants</option>
+                <option>Braces & clear aligners</option>
+                <option>Kids' dentistry</option>
+                <option>Emergency / tooth pain</option>
+              </select>
+            </label>
+            <label style="display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:700;color:#3c4666">Message <span style="font-weight:500;color:#9aa3bd">(optional)</span>
+              <textarea value="{{ fMsg }}" onChange="{{ setFMsg }}" placeholder="Tell us briefly about your concern…" rows="4" style="border:1.5px solid #e2e0d3;border-radius:12px;padding:13px 15px;font-size:14.5px;color:#1c2340;background:#fdfcf9;outline:none;resize:vertical;transition:border-color .2s" style-focus="border-color:#1c2f6e"></textarea>
+            </label>
+            <sc-if value="{{ formError }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:13.5px;color:#b3492f;font-weight:700">Please enter your name and phone number so we can reach you.</div>
+            </sc-if>
+            <button onClick="{{ submitForm }}" style="background:{{ navy }};color:#fff;border:none;border-radius:12px;padding:16px 28px;font-weight:800;font-size:15.5px;cursor:pointer;box-shadow:0 10px 26px rgba(28,47,110,.28);transition:transform .2s,box-shadow .2s;font-family:'Manrope',sans-serif" style-hover="transform:translateY(-2px);box-shadow:0 14px 32px rgba(28,47,110,.38)">Request Appointment</button>
+          </div>
+        </sc-if>
+      </div>
+      <div data-rv style="display:flex;flex-direction:column;gap:20px">
+        <iframe title="Map to Classic Smile Dental Care" src="https://maps.google.com/maps?q=Classic%20Smile%20Dental%20Care%2C%20Tanishq%20Orchid%2C%20Charholi%20Rd%2C%20Pune&z=15&output=embed" style="width:100%;flex:1;min-height:280px;border:none;border-radius:20px;box-shadow:0 10px 30px rgba(28,35,64,.08)" loading="lazy" allowfullscreen="true"></iframe>
+        <div style="background:{{ navy }};color:#eef1fb;border-radius:20px;padding:28px 30px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px">
+          <div>
+            <div style="font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#e8c37a;margin-bottom:8px">Address</div>
+            <div style="font-size:14.5px;line-height:1.55;color:#dde2f4">Shop 18, First Floor, T Wing,<br>Tanishq Orchid, Charholi Rd,<br>Pune, Maharashtra</div>
+            <a href="https://maps.app.goo.gl/zMNQ5Ng9dnUi8R1X9" target="_blank" rel="noopener" style="display:inline-block;margin-top:10px;font-size:13.5px;font-weight:700;color:#e8c37a" style-hover="color:#f3e3c3">Get directions →</a>
+          </div>
+          <div>
+            <div style="font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#e8c37a;margin-bottom:8px">Contact & Hours</div>
+            <div style="font-size:14.5px;line-height:1.7;color:#dde2f4">
+              <a href="tel:+919763226605" style="color:#eef1fb;font-weight:700" style-hover="color:#e8c37a">097632 26605</a><br>
+              <a href="mailto:avkamble96@gmail.com" style="color:#eef1fb" style-hover="color:#e8c37a">avkamble96@gmail.com</a><br>
+              Mon–Sat · 10 am – 2 pm, 5 – 9 pm
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer style="background:#141c3d;color:#c3cae4">
+  <div style="max-width:1200px;margin:0 auto;padding:52px 28px 34px">
+    <div style="display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;align-items:flex-start;padding-bottom:34px;border-bottom:1px solid rgba(255,255,255,.09)">
+      <div style="max-width:340px">
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:14px">
+          <span style="width:38px;height:38px;border-radius:50%;background:{{ gold }};display:flex;align-items:center;justify-content:center;color:#1c2340;font-family:'DM Serif Display',serif;font-size:17px">CS</span>
+          <span style="font-weight:800;font-size:16px;color:#fdfbf6">Classic Smile Dental Care</span>
+        </div>
+        <p style="font-size:13.5px;line-height:1.65;margin:0;color:#9aa3c9">Classic values, modern dentistry — caring for families at Tanishq Orchid, Charholi Road, and across Pune.</p>
+      </div>
+      <div style="display:flex;gap:56px;flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px">
+          <span style="font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#7f8ab3;margin-bottom:4px">Explore</span>
+          <a href="#services" style="color:#c3cae4" style-hover="color:#e8c37a">Treatments</a>
+          <a href="#why" style="color:#c3cae4" style-hover="color:#e8c37a">Why Us</a>
+          <a href="#reviews" style="color:#c3cae4" style-hover="color:#e8c37a">Reviews</a>
+          <a href="#visit" style="color:#c3cae4" style-hover="color:#e8c37a">Visit Us</a>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px">
+          <span style="font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#7f8ab3;margin-bottom:4px">Reach Us</span>
+          <a href="tel:+919763226605" style="color:#c3cae4" style-hover="color:#e8c37a">097632 26605</a>
+          <a href="mailto:avkamble96@gmail.com" style="color:#c3cae4" style-hover="color:#e8c37a">avkamble96@gmail.com</a>
+          <a href="https://maps.app.goo.gl/zMNQ5Ng9dnUi8R1X9" target="_blank" rel="noopener" style="color:#c3cae4" style-hover="color:#e8c37a">Google Maps</a>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:22px;font-size:12.5px;color:#7f8ab3">
+      <span>© 2026 Classic Smile Dental Care. All rights reserved.</span>
+      <span>Shop 18, T Wing, Tanishq Orchid, Charholi Rd, Pune, Maharashtra</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating WhatsApp -->
+<sc-if value="{{ showWhatsApp }}" hint-placeholder-val="{{ true }}">
+  <a href="https://wa.me/919763226605" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" style="position:fixed;bottom:26px;right:26px;z-index:90;width:56px;height:56px;border-radius:50%;background:#25d366;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(37,211,102,.4);transition:transform .2s" style-hover="transform:scale(1.08);color:#fff">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.7-1.2A9 9 0 1 0 12 3Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"></path><path d="M8.7 9.2c.3 2.7 3.4 5.8 6.1 6.1l1-1.6-2-1.2-1 .7c-.8-.4-1.7-1.3-2.1-2.1l.7-1-1.2-2-1.5 1.1Z" fill="#fff"></path></svg>
+  </a>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;primaryColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#2b2b33&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#1c2f6e&quot;,&quot;#14532d&quot;,&quot;#5b2338&quot;,&quot;#2b2b33&quot;],&quot;section&quot;:&quot;Colours&quot;},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#e8c37a&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#e8c37a&quot;,&quot;#d9a066&quot;,&quot;#d98fa2&quot;,&quot;#9fc7a5&quot;],&quot;section&quot;:&quot;Colours&quot;},&quot;showWhatsApp&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Features&quot;}}">
+class Component extends DCLogic {
+  state = {
+    scrolled: false,
+    menuOpen: false,
+    slide: 0,
+    fading: false,
+    counterP: 0,
+    heroY: 0,
+    formSent: false,
+    formError: false,
+    fName: '', fPhone: '', fService: 'Check-up & cleaning', fMsg: ''
+  };
+
+  testimonials = [
+    { quote: 'I walked in terrified and walked out wondering what I was scared of. The doctor explained everything before touching a single instrument. Completely painless.', name: 'Manasi Shinde', meta: 'Root Canal · Charholi' },
+    { quote: 'Got an implant done after years of avoiding it. Transparent pricing, no upselling, and the follow-up care was genuinely thoughtful. Highly recommend.', name: 'Vikram Kadam', meta: 'Implant · Moshi' },
+    { quote: 'My daughter had her first filling here and she came out smiling. The team is wonderful with kids — patient, playful and very gentle.', name: 'Aarti Nair', meta: "Kids' Dentistry · Dighi" }
+  ];
+
+  goSlide(n) {
+    const len = this.testimonials.length;
+    const next = ((n % len) + len) % len;
+    this.setState({ fading: true });
+    setTimeout(() => this.setState({ slide: next, fading: false }), 350);
+  }
+
+  componentDidMount() {
+    this._timer = setInterval(() => this.goSlide(this.state.slide + 1), 6500);
+    this._onScroll = () => {
+      const sc = window.scrollY > 12;
+      if (sc !== this.state.scrolled) this.setState({ scrolled: sc });
+      const hy = Math.round(Math.min(window.scrollY, 700) * 0.1 / 2) * 2;
+      if (hy !== this.state.heroY) this.setState({ heroY: hy });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+
+    this._statsIo = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          this._statsIo.disconnect();
+          const t0 = performance.now(), dur = 1400;
+          const tick = (now) => {
+            const p = Math.min((now - t0) / dur, 1);
+            this.setState({ counterP: 1 - Math.pow(1 - p, 3) });
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }
+      });
+    }, { threshold: 0.4 });
+    const statsEl = document.getElementById('stats');
+    if (statsEl) this._statsIo.observe(statsEl);
+
+    this._io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('rv-in'); this._io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    this._observeAll();
+    this._mo = new MutationObserver(() => this._observeAll());
+    this._mo.observe(document.body, { childList: true, subtree: true });
+  }
+
+  _observeAll() {
+    document.querySelectorAll('[data-rv]:not(.rv-in):not([data-rv-seen])').forEach(el => {
+      el.setAttribute('data-rv-seen', '1');
+      this._io.observe(el);
+    });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll);
+    if (this._io) this._io.disconnect();
+    if (this._mo) this._mo.disconnect();
+    if (this._statsIo) this._statsIo.disconnect();
+    clearInterval(this._timer);
+  }
+
+  renderVals() {
+    const { scrolled, menuOpen, slide, fading, counterP, heroY, formSent, formError, fName, fPhone, fService, fMsg } = this.state;
+    const cnt = (n, dec) => (n * counterP).toFixed(dec || 0);
+    const t = this.testimonials[slide];
+    const bind = (key) => (e) => this.setState({ [key]: e.target.value });
+    const navy = this.props.primaryColor ?? '#1c2f6e';
+    const gold = this.props.accentColor ?? '#e8c37a';
+
+    return {
+      navy, gold,
+      navBg: scrolled ? 'rgba(253,251,246,.9)' : 'rgba(253,251,246,.65)',
+      navBorder: scrolled ? '#e7e3d6' : 'transparent',
+      menuOpen,
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      bar1: menuOpen ? 'translateY(7px) rotate(45deg)' : 'none',
+      bar2: menuOpen ? 0 : 1,
+      bar3: menuOpen ? 'translateY(-7px) rotate(-45deg)' : 'none',
+
+      heroY: heroY + 'px',
+
+      stats: [
+        { value: cnt(10) + '+', label: 'Years of clinical experience' },
+        { value: Number(cnt(8000)).toLocaleString('en-IN') + '+', label: 'Happy patients treated' },
+        { value: cnt(4.8, 1) + '★', label: 'Average Google rating' },
+        { value: cnt(20) + '+', label: 'Treatments in-clinic' },
+        { value: cnt(100) + '%', label: 'Sterilized, single-use kits' }
+      ],
+
+      galleryLoop: (() => {
+        const g = [
+          { img: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=600&q=80', alt: 'Modern dental examination room' },
+          { img: 'https://images.unsplash.com/photo-1629909615957-be38d48fbbe6?auto=format&fit=crop&w=600&q=80', alt: 'Bright dental treatment room' },
+          { img: 'https://images.unsplash.com/photo-1606811971618-4486d14f3f99?auto=format&fit=crop&w=600&q=80', alt: 'Bright, healthy smile close-up' },
+          { img: 'https://images.unsplash.com/photo-1571772996211-2f02c9727629?auto=format&fit=crop&w=600&q=80', alt: 'Dental surgeon at work' },
+          { img: 'https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&w=600&q=80', alt: 'Patient placing a clear aligner' },
+          { img: 'https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&w=600&q=80', alt: 'Friendly, colorful dental room' }
+        ];
+        return g.concat(g);
+      })(),
+
+      services: [
+        { num: '01', title: 'Check-ups & Cleaning', desc: 'Complete oral examinations, scaling and polishing that keep small problems from becoming big ones.', img: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=700&q=80', imgAlt: 'Modern dental examination room' },
+        { num: '02', title: 'Teeth Whitening & Smile Design', desc: 'Professional whitening and veneers tailored to your face — bright, natural, confident results.', img: 'https://images.unsplash.com/photo-1606811971618-4486d14f3f99?auto=format&fit=crop&w=700&q=80', imgAlt: 'Close-up of a bright, healthy smile' },
+        { num: '03', title: 'Root Canal Treatment', desc: 'Pain-managed, single-visit root canals with rotary instruments and digital X-rays.', img: 'https://images.unsplash.com/photo-1606265752439-1f18756aa5fc?auto=format&fit=crop&w=700&q=80', imgAlt: 'Dentist holding examination instruments' },
+        { num: '04', title: 'Dental Implants', desc: 'Permanent, natural-feeling replacements for missing teeth, planned digitally for precision.', img: 'https://images.unsplash.com/photo-1571772996211-2f02c9727629?auto=format&fit=crop&w=700&q=80', imgAlt: 'Dental surgeon at work under the operatory light' },
+        { num: '05', title: 'Braces & Clear Aligners', desc: 'Conventional braces and nearly invisible aligners for teens and adults, with easy payment plans.', img: 'https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&w=700&q=80', imgAlt: 'Patient placing a clear aligner' },
+        { num: '06', title: "Kids' Dentistry", desc: 'Gentle first visits and friendly ongoing care that make children actually enjoy the dentist.', img: 'https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&w=700&q=80', imgAlt: 'Friendly, colorful dental treatment room' }
+      ].map((s, i) => ({ ...s, delay: ((i % 3) * 0.12) + 's' })),
+
+      reasons: [
+        { icon: '🤝', title: 'Honest treatment plans', desc: 'We tell you what you need, what can wait, and what you can skip — with pricing agreed before we start.' },
+        { icon: '🩺', title: 'Gentle, pain-managed care', desc: 'Modern anesthesia and an unhurried chairside manner, so even anxious patients feel at ease.' },
+        { icon: '🧪', title: 'Strict sterilization', desc: 'Hospital-grade autoclave sterilization and single-use disposables for every single patient.' },
+        { icon: '📍', title: 'Right in your society', desc: 'Inside Tanishq Orchid on Charholi Rd — evening hours and same-day slots for emergencies.' }
+      ],
+
+      credentials: [
+        { title: 'BDS — Bharati Vidyapeeth Dental College, Pune', desc: 'Bachelor of Dental Surgery with clinical honours.' },
+        { title: 'MDS — Prosthodontics & Implantology', desc: 'Master of Dental Surgery specialising in crowns, bridges and implants.' },
+        { title: 'Certified Implantologist', desc: 'Advanced certification in digitally guided implant placement.' },
+        { title: 'Member, Indian Dental Association', desc: 'Active member, Pune chapter — continuing education every year.' }
+      ],
+
+      ratingBars: [
+        { star: 5, w: '88%', pct: '88%', delay: '.1s' },
+        { star: 4, w: '9%', pct: '9%', delay: '.2s' },
+        { star: 3, w: '2%', pct: '2%', delay: '.3s' },
+        { star: 2, w: '1%', pct: '1%', delay: '.4s' },
+        { star: 1, w: '0%', pct: '0%', delay: '.5s' }
+      ],
+
+      activeQuote: t.quote,
+      activeName: t.name,
+      activeMeta: t.meta,
+      slideOpacity: fading ? 0 : 1,
+      prevSlide: () => { clearInterval(this._timer); this.goSlide(slide - 1); },
+      nextSlide: () => { clearInterval(this._timer); this.goSlide(slide + 1); },
+      dots: this.testimonials.map((_, i) => ({
+        go: () => { clearInterval(this._timer); this.goSlide(i); },
+        label: 'Go to review ' + (i + 1),
+        w: i === slide ? '26px' : '8px',
+        bg: i === slide ? gold : '#d9ddeb'
+      })),
+
+      formSent, formNotSent: !formSent, formError,
+      fName, fPhone, fService, fMsg,
+      setFName: bind('fName'), setFPhone: bind('fPhone'), setFService: bind('fService'), setFMsg: bind('fMsg'),
+      submitForm: () => {
+        if (!fName.trim() || !fPhone.trim()) { this.setState({ formError: true }); return; }
+        this.setState({ formSent: true, formError: false });
+      },
+      resetForm: () => this.setState({ formSent: false, fName: '', fPhone: '', fMsg: '' }),
+
+      showWhatsApp: this.props.showWhatsApp ?? true
+    };
+  }
+}
+</script>
+</body>
+</html>
